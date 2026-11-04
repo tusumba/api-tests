@@ -1,0 +1,46 @@
+[project]
+name = "api-tests"
+version = "0.1.0"
+description = "Автотесты API Tusumba для стенда"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "httpx>=0.27,<1",
+    "pydantic>=2.7,<3",
+    "pydantic-settings>=2.3,<3",
+    "pytest>=8,<10",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.6",
+    "mypy>=1.11",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "--strict-markers --tb=short"
+filterwarnings = ["error"]
+markers = [
+    "stand: нужен запущенный стенд, запросы идут через шлюз",
+    "in_network: нужен доступ к сервисам напрямую, запуск только внутри сети Compose",
+]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]

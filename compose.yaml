@@ -1,0 +1,18 @@
+# Запуск тестов внутри сети стенда из репозитория deploy.
+# Стенд этот файл не поднимает и не останавливает: сначала `docker compose up` в deploy.
+name: tusumba-api-tests
+
+services:
+  api-tests:
+    build: .
+    environment:
+      API_TEST_GATEWAY_URL: ${API_TEST_GATEWAY_URL:-http://nginx}
+      API_TEST_TIMEOUT_SECONDS: ${API_TEST_TIMEOUT_SECONDS:-10}
+    networks:
+      - stand
+
+networks:
+  stand:
+    external: true
+    # Compose-проект deploy называется tusumba, его сеть по умолчанию - tusumba_default.
+    name: ${API_TEST_NETWORK:-tusumba_default}
